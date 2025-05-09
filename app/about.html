@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - CIDR Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header {
+            background-color: #0078d4;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav {
+            display: flex;
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: #0078d4;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #0078d4;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .azure-logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .azure-logo img {
+            max-width: 200px;
+        }
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .tech-item {
+            background-color: #f0f7ff;
+            border-left: 4px solid #0078d4;
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>About the CIDR Calculator Project</h1>
+        <p>A web application deployed on Microsoft Azure</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Calculator</a>
+        <a href="about.html">About</a>
+    </nav>
+
+    <div class="container">
+        <div class="section">
+            <h2>Project Overview</h2>
+            <p>This CIDR Calculator web application is designed as a test project for deploying web applications to Microsoft Azure cloud platform. The project demonstrates fundamental concepts of web development and cloud deployment strategies.</p>
+            
+            <div class="azure-logo">
+                <img src="/api/placeholder/200/100" alt="Azure Logo Placeholder">
+            </div>
+            
+            <p>The application provides a simple but powerful tool for network administrators and IT professionals to quickly calculate network information based on CIDR notation, including subnet masks, network addresses, broadcast addresses, and usable IP ranges.</p>
+        </div>
+
+        <div class="section">
+            <h2>Azure Deployment</h2>
+            <p>This project explores the workflow of deploying a web application to Microsoft Azure using the following services:</p>
+            
+            <div class="tech-list">
+                <div class="tech-item">Azure App Service</div>
+                <div class="tech-item">Azure DevOps</div>
+                <div class="tech-item">GitHub Actions</div>
+                <div class="tech-item">Application Insights</div>
+            </div>
+            
+            <p>The deployment process includes:</p>
+            <ol>
+                <li>Setting up a GitHub repository for version control</li>
+                <li>Configuring continuous integration and continuous deployment (CI/CD) pipelines</li>
+                <li>Provisioning Azure resources using Infrastructure as Code (IaC)</li>
+                <li>Implementing monitoring and logging for application performance</li>
+                <li>Setting up staging and production environments</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>CIDR Calculator Features</h2>
+            <p>The CIDR (Classless Inter-Domain Routing) calculator implements the following features:</p>
+            <ul>
+                <li>Conversion of CIDR notation to subnet mask</li>
+                <li>Calculation of network address</li>
+                <li>Calculation of broadcast address</li>
+                <li>Determination of first and last usable host addresses</li>
+                <li>Calculation of total number of usable hosts</li>
+                <li>Input validation for proper IP address and prefix formats</li>
+            </ul>
+            <p>This tool is particularly useful for network planning, troubleshooting, and documentation.</p>
+        </div>
+
+        <div class="section">
+            <h2>Technologies Used</h2>
+            <p>The application is built using:</p>
+            <ul>
+                <li><strong>Frontend:</strong> HTML5, CSS3, and vanilla JavaScript</li>
+                <li><strong>Version Control:</strong> Git and GitHub</li>
+                <li><strong>Cloud Platform:</strong> Microsoft Azure</li>
+                <li><strong>DevOps:</strong> Azure DevOps or GitHub Actions</li>
+                <li><strong>Monitoring:</strong> Azure Application Insights</li>
+            </ul>
+            <p>The project deliberately uses minimal dependencies to focus on the deployment process rather than complex application architecture.</p>
+        </div>
+
+        <div class="section">
+            <h2>Learning Objectives</h2>
+            <p>This project serves as a learning platform for:</p>
+            <ul>
+                <li>Understanding the Azure cloud ecosystem</li>
+                <li>Implementing modern DevOps practices</li>
+                <li>Setting up efficient CI/CD pipelines</li>
+                <li>Deploying and scaling web applications in the cloud</li>
+                <li>Implementing proper monitoring and logging</li>
+                <li>Applying infrastructure as code principles</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>CIDR Calculator Web Application - Deployed on Azure &copy; 2025</p>
+    </footer>
+</body>
+</html>

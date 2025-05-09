@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App - CIDR Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header {
+            background-color: #0078d4;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav {
+            display: flex;
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: #0078d4;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border-radius: 5px;
+            border-left: 5px solid #0078d4;
+        }
+        .result-row {
+            margin-bottom: 10px;
+        }
+        .result-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 200px;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIDR Calculator</h1>
+        <p>Calculate network information from CIDR notation</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Calculator</a>
+        <a href="about.html">About</a>
+    </nav>
+
+    <div class="container">
+        <div class="input-group">
+            <label for="cidr">Enter IP address with CIDR notation:</label>
+            <input type="text" id="cidr" placeholder="e.g. 192.168.1.0/24" value="192.168.1.0/24">
+            <button onclick="calculateCIDR()">Calculate</button>
+        </div>
+
+        <div class="result" id="result">
+            <h3>Results:</h3>
+            <div id="resultContent">
+                <!-- Results will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>CIDR Calculator Web Application - Deployed on Azure</p>
+    </footer>
+
+    <script>
+        // Calculate CIDR on page load
+        window.onload = function() {
+            calculateCIDR();
+        };
+
+        function calculateCIDR() {
+            const cidrInput = document.getElementById('cidr').value.trim();
+            const resultContent = document.getElementById('resultContent');
+            
+            // Basic validation
+            if (!cidrInput.includes('/')) {
+                resultContent.innerHTML = '<p>Error: Input must be in CIDR notation (e.g., 192.168.1.0/24)</p>';
+                return;
+            }
+            
+            try {
+                // Split the input into IP and prefix parts
+                const [ipPart, prefixPart] = cidrInput.split('/');
+                const prefix = parseInt(prefixPart);
+                
+                // Validate prefix
+                if (isNaN(prefix) || prefix < 0 || prefix > 32) {
+                    resultContent.innerHTML = '<p>Error: Prefix must be a number between 0 and 32</p>';
+                    return;
+                }
+                
+                // Validate IP
+                const ipOctets = ipPart.split('.').map(Number);
+                if (ipOctets.length !== 4 || ipOctets.some(octet => isNaN(octet) || octet < 0 || octet > 255)) {
+                    resultContent.innerHTML = '<p>Error: Invalid IP address format</p>';
+                    return;
+                }
+                
+                // Calculate subnet mask
+                const subnetMask = calculateSubnetMask(prefix);
+                
+                // Calculate network address
+                const networkAddress = calculateNetworkAddress(ipOctets, subnetMask);
+                
+                // Calculate broadcast address
+                const broadcastAddress = calculateBroadcastAddress(networkAddress, subnetMask);
+                
+                // Calculate first usable host
+                const firstHost = getFirstHost(networkAddress);
+                
+                // Calculate last usable host
+                const lastHost = getLastHost(broadcastAddress);
+                
+                // Calculate total hosts
+                const totalHosts = Math.pow(2, 32 - prefix) - 2;
+                
+                // Display results
+                resultContent.innerHTML = `
+                    <div class="result-row"><span class="result-label">IP Address:</span> ${ipPart}</div>
+                    <div class="result-row"><span class="result-label">Prefix Length:</span> ${prefix}</div>
+                    <div class="result-row"><span class="result-label">Subnet Mask:</span> ${subnetMask.join('.')}</div>
+                    <div class="result-row"><span class="result-label">Network Address:</span> ${networkAddress.join('.')}</div>
+                    <div class="result-row"><span class="result-label">Broadcast Address:</span> ${broadcastAddress.join('.')}</div>
+                    <div class="result-row"><span class="result-label">First Usable Host:</span> ${firstHost.join('.')}</div>
+                    <div class="result-row"><span class="result-label">Last Usable Host:</span> ${lastHost.join('.')}</div>
+                    <div class="result-row"><span class="result-label">Total Usable Hosts:</span> ${totalHosts > 0 ? totalHosts : 0}</div>
+                `;
+            } catch (error) {
+                resultContent.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+        
+        function calculateSubnetMask(prefix) {
+            const mask = new Array(4).fill(0);
+            
+            for (let i = 0; i < 4; i++) {
+                if (prefix >= 8) {
+                    mask[i] = 255;
+                    prefix -= 8;
+                } else if (prefix > 0) {
+                    mask[i] = 256 - Math.pow(2, 8 - prefix);
+                    prefix = 0;
+                }
+            }
+            
+            return mask;
+        }
+        
+        function calculateNetworkAddress(ip, mask) {
+            return ip.map((octet, index) => octet & mask[index]);
+        }
+        
+        function calculateBroadcastAddress(network, mask) {
+            return network.map((octet, index) => octet | (255 - mask[index]));
+        }
+        
+        function getFirstHost(network) {
+            const firstHost = [...network];
+            
+            // If it's not a /31 or /32 network
+            if (firstHost[3] !== 255) {
+                firstHost[3] += 1;
+            }
+            
+            return firstHost;
+        }
+        
+        function getLastHost(broadcast) {
+            const lastHost = [...broadcast];
+            
+            // If it's not a /31 or /32 network
+            if (lastHost[3] !== 0) {
+                lastHost[3] -= 1;
+            }
+            
+            return lastHost;
+        }
+    </script>
+</body>
+</html>
