@@ -1,0 +1,61 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main  # This triggers the workflow on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # This checks out your repository's code
+
+    - name: Set up Azure CLI
+      uses: azure/setup-azurecli@v1  # This installs Azure CLI
+
+    - name: Azure Login
+      uses: azure/login@v1  # Log in to Azure using a Service Principal (requires secrets setup)
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1  # Install Terraform on the runner
+
+    - name: Terraform Init
+      run: terraform init  # Initializes Terraform
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve  # Apply the Terraform plan to deploy resources
+
+    - name: Deploy App to Azure
+      run: |
+        az webapp up --name ${{ secrets.AZURE_APP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --plan ${{ secrets.AZURE_APP_SERVICE_PLAN }} --location ${{ secrets.AZURE_LOCATION }} --sku B1  # Adjust according to your setup
+name: Azure Web App Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
+          package: ./app
